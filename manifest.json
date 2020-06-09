@@ -1,0 +1,26 @@
+  {
+      "name": "Meeting Assistant",
+      "version": "0.2",
+      "description": "Enables capturing of CC text in Google Meet meetings.",
+      "permissions": [
+          "declarativeContent",
+          "activeTab"
+      ],
+      "background": {
+          "scripts": ["background.js"],
+          "persistent": false
+      },
+      "content_scripts": [{
+          "matches": ["https://meet.google.com/*"],
+          "run_at": "document_end",
+          "js": ["content.js"]
+      }],
+      "icons": {
+          "16": "./images/Luffys-flag-2-icon-16.png",
+          "24": "./images/Luffys-flag-2-icon-24.png",
+          "48": "./images/Luffys-flag-2-icon-48.png",
+          "72": "./images/Luffys-flag-2-icon-72.png",
+          "128": "./images/Luffys-flag-2-icon-128.png"
+      },
+      "manifest_version": 2
+  }
