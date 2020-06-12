@@ -2,6 +2,7 @@
 function MeetingAttendee(n) {
     this.name = n;
     this.text = [];
+    this.index = 0;
 }
 
 MeetingAttendee.prototype = {
