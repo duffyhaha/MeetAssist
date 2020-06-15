@@ -63,13 +63,12 @@ var observer = new MutationObserver(function(mutations) {
         if (userSpeach[elementToQuery]) {
             //pull count of the spans for the user
             //console.log("text Lines: " + userSpeach[0].getElementsByClassName(textSPAN).length);
-            var textStorage = userSpeach[elementToQuery].getElementsByClassName(textSPAN);
+            var textSpanArray = userSpeach[elementToQuery].getElementsByClassName(textSPAN);
 
-            console.log('textstorage: ' + textStorage.length.toString());
+            console.log('textSpanArray: ' + textSpanArray.length.toString());
 
             //see if the speaker is the current one, or a new speaker.
             if (isCurrentSpeaker(userName[elementToQuery].textContent.toString())) {
-                /**********notes on next functionality****************/
                 //look at speaker's text array via a ref link to the array member
                 var person = listOfAttendees[(listOfAttendees.length - 1)];
 
@@ -79,12 +78,12 @@ var observer = new MutationObserver(function(mutations) {
                     person.index = 0;
                 } else {
                     //if the current 'start' index text does not match the first SPAN text
-                    if (person.text[person.index] != textStorage[0].textContent) {
+                    if (person.text[person.index] != textSpanArray[0].textContent) {
                         //find where the first match is
                         //////look for first span text in array and store that index as first
                         for (var i = person.index; i < (person.text.length - person.index); i++) { //make sure it is not out of bounds
                             //if the text matches
-                            if (person.text[i] == textStorage[0].textContent) {
+                            if (person.text[i] == textSpanArray[0].textContent) {
                                 //capture the new index
                                 person.index = i;
                                 break;
@@ -102,9 +101,9 @@ var observer = new MutationObserver(function(mutations) {
                 }
 
                 //capture all of the span's text into the array, from array index person.index
-                for (var i = 0; i < textStorage.length; i++) {
+                for (var i = 0; i < textSpanArray.length; i++) {
                     //push new text to end of the array
-                    person.text.push();
+                    person.text.push(textSpanArray[i].textContent);
                 }
 
 
@@ -160,7 +159,7 @@ var observer = new MutationObserver(function(mutations) {
             //    console.log(mutation.addedNodes.getElementsByClassName(textSPAN).length.toString());
             //});
 
-            for (i = 0; i < textStorage.length; i++) {
+            for (i = 0; i < textSpanArray.length; i++) {
                 //append text content to user's object
                 //meetingAttendee[0].text = meetingAttendee[0].text + textStorage[i].textContent.toString();
                 //console.log(textStorage[i].textContent.toString());
