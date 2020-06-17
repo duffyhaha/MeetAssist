@@ -1,9 +1,10 @@
   {
       "name": "Meeting Assistant",
-      "version": "0.4",
+      "version": "0.5",
       "description": "Enables capturing of CC text in Google Meet meetings.",
       "permissions": [
           "declarativeContent",
+          "storage",
           "activeTab"
       ],
       "background": {
