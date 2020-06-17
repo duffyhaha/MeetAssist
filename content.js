@@ -41,19 +41,19 @@ var observer = new MutationObserver(function(mutations) {
         //variable to store array index for speaker
         //var elementToQuery = ccElements[0].childNodes.length - 1; //takes the array length and converts to index
 
-        for (i = 0; i < ccElements[0].childNodes.length; i++) {
+        //get the node collection that has the user names
+        var userName = ccElements[0].getElementsByClassName(nameDIV); //there will only ever be one ccDIV element.  index is always zero
 
-            //get the node collection that has the user names
-            var userName = ccElements[0].getElementsByClassName(nameDIV); //there will only ever be one ccDIV element.  index is always zero
+        //get user text as array of nodes for the current speaker
+        var userSpeach = ccElements[0].getElementsByClassName(textDIV);
+
+        for (i = 0; i < ccElements[0].childNodes.length; i++) {
 
             //check if the username object exists
             if (userName[i]) {
                 //get their screen name
                 console.log('User Name: ' + userName[i].textContent.toString());
             }
-
-            //get user text as array of nodes for the current speaker
-            var userSpeach = ccElements[0].getElementsByClassName(textDIV);
 
             if (userSpeach[i]) {
                 //pull count of the spans for the user
@@ -62,7 +62,7 @@ var observer = new MutationObserver(function(mutations) {
 
                 //console.log('textSpanArray: ' + textSpanArray.length.toString());
 
-                //see if the speaker is the current one, or a new speaker.
+                //initialize a new speaker if needed
                 if (isCurrentSpeaker(userName[i].textContent.toString())) {
                     //look at speaker's text array via a ref link to the array member
                     var person = listOfAttendees[(listOfAttendees.length - 1)];
@@ -103,53 +103,47 @@ var observer = new MutationObserver(function(mutations) {
                     }
 
                 } else {
-                    //
-                }
+                    //look at past speaker's text array via a ref link to the array member
+                    var person = listOfAttendees[(listOfAttendees.length - 2)];
 
-            }
-
-
-
-
-
-            //if a difference is found, replace all elements in array, starting with that point forward
-            //else, insert new text into end of array
-            /*
-            //get the nodes removed from the text area and take off the ones that are being updated, not the scrolled off ones.
-            mutations.forEach(function(mutation) {
-                //search for the text content in the span against the user's text array
-                console.log('<rem> mutation length: ' + mutation.removedNodes.length.toString() + '<add> mutation length: ' + mutation.addedNodes.length.toString());
-                //console.log(mutation.type.toString());
-
-                if (mutation.removedNodes.length > 0) {
-                    mutation.removedNodes.forEach(function(nodes) {
-                        if (nodes.nodeName.toString() == "SPAN") {
-                            console.log('removed node name: ' + nodes.nodeName.toString() + ' : ' + nodes.textContent);
+                    //compare element by element with current 'array' of span elements
+                    //first find the 'begining' of the array to search
+                    if (person.text.length = 0) {
+                        person.index = 0;
+                    } else {
+                        //if the current 'start' index text does not match the first SPAN text
+                        if (person.text[person.index] != textSpanArray[0].textContent) {
+                            //find where the first match is
+                            //////look for first span text in array and store that index as first
+                            for (var j = person.index; j < (person.text.length - person.index); j++) { //make sure it is not out of bounds
+                                //if the text matches
+                                if (person.text[j] == textSpanArray[0].textContent) {
+                                    //capture the new index
+                                    person.index = j;
+                                    break;
+                                }
+                            }
+                        } else {
+                            //they do match
                         }
-                    });
+                    }
+
+                    if (ccElements[0].childNodes.length > 1) {
+                        if (i == 0) {
+                            //finalize text for previous speaker
+                            updateSpeakerText(person, textSpanArray, true);
+                        } else {
+                            //append text as normal
+                            updateSpeakerText(person, textSpanArray, false);
+                        }
+                    } else {
+                        //update the text for the current speaker object
+                        updateSpeakerText(person, textSpanArray, false);
+                    }
                 }
 
-                if(mutation.addedNodes.length>0){
-                    mutation.removedNodes.forEach(function(nodes){
-                        nodes.
-                    });
-                }
-            });
-            */
-
-
-
-
-            //get the nodes added and append them to the array
-            //mutations.forEach(function(mutation) {
-            //    console.log(mutation.addedNodes.getElementsByClassName(textSPAN).length.toString());
-            //});
-
-            for (i = 0; i < textSpanArray.length; i++) {
-                //append text content to user's object
-                //meetingAttendee[0].text = meetingAttendee[0].text + textStorage[i].textContent.toString();
-                //console.log(textStorage[i].textContent.toString());
             }
+
         }
 
     } else if (listOfAttendees.length != 0) {
