@@ -1,8 +1,8 @@
-/*
+/**
  * Author: Aaron Duffy
- *
- * Functionality: 
- * Used to process changes to the DOM and pull the user's CC text 
+ * 
+ * Functionality:
+ * Used to process changes to the DOM and pull the user's CC text
  * for Google Meet meetings.
  */
 
@@ -44,6 +44,11 @@ var observer = new MutationObserver(function(mutations) {
         //test script to show the number of people talking
         console.log("# people talking: " + ccElements[0].childNodes.length.toString()); //number of people talking
 
+        /**
+         * Need to update this to use a for loop to go through the speaker list
+         * currently, only the last index in the array is selected
+         * this will skip the index zero speaker and never finalize them
+         */
         //variable to store array index for speaker
         var elementToQuery = ccElements[0].childNodes.length - 1; //takes the array length and converts to index
 
@@ -54,7 +59,6 @@ var observer = new MutationObserver(function(mutations) {
         if (userName[elementToQuery]) {
             //get their screen name
             console.log('User Name: ' + userName[elementToQuery].textContent.toString());
-            //console.log('unique: ' + userName[0].getElementsByTagName('img')[0].getAttribute('data-iml').textContent.toString());
         }
 
         //get user text as array of nodes for the current speaker
@@ -94,18 +98,8 @@ var observer = new MutationObserver(function(mutations) {
                     }
                 }
 
-                //reduce text array to correct size by removing changed items
-                for (var i = person.text.length; i > person.index; i--) {
-                    //pop off the last element in the array
-                    person.text.pop();
-                }
-
-                //capture all of the span's text into the array, from array index person.index
-                for (var i = 0; i < textSpanArray.length; i++) {
-                    //push new text to end of the array
-                    person.text.push(textSpanArray[i].textContent);
-                }
-
+                //update the text for the current speaker object
+                updateSpeakerText(person, textSpanArray, false);
 
 
 
@@ -180,12 +174,17 @@ observer.observe(elementToObserve, { subtree: true, childList: true });
 console.log('End of content.js');
 
 
-//function to see if the speaker is the current one, or a new speaker.
-//takes a string name as the argument
+/**
+ * See if the speaker is the current one, or a new speaker (appends to speaker array).
+ *
+ * @param {string} varPerson The name of the speaker to check.
+ * @return {boolean} Is this the current speaker?
+ */
 function isCurrentSpeaker(varPerson) {
     //create a variable to store the array's length
     var len = 0;
 
+    //if there are people in the list of speakers
     if (listOfAttendees.length != 0) {
         //check to see if the speaker is the same
         if (listOfAttendees[(listOfAttendees.length - 1)].name.toString() != varPerson.toString()) {
@@ -197,8 +196,32 @@ function isCurrentSpeaker(varPerson) {
             return true;
         }
     } else {
-        //push new person into queue
+        //push new person into queue as this is the first person talking
         len = listOfAttendees.push(person = new MeetingAttendee(varPerson));
-        return false;
+        return true;
     }
+}
+
+/**
+ * Update the speakers text array and set finalized status.
+ *
+ * @param {MeetingAttendee} p The Speaker to check.
+ * @param {HTMLCollection} t The array of SPAN elements of text
+ * @param {boolean} b Finalize the text for the Speaker?
+ */
+function updateSpeakerText(p, t, b) {
+    //reduce text array to correct size by removing changed items
+    for (var i = p.text.length; i > p.index; i--) {
+        //pop off the last element in the array
+        p.text.pop();
+    }
+
+    //capture all of the span's text into the array, from array index person.index
+    for (var i = 0; i < t.length; i++) {
+        //push new text to end of the array
+        p.text.push(t[i].textContent);
+    }
+
+    //set the finzlized value for the object
+    p.finalized = b;
 }
