@@ -1,10 +1,10 @@
 // Saves options to chrome.storage
 function save_options() {
-    var color = document.getElementById('color').value;
-    var likesColor = document.getElementById('like').checked;
+    var talkKey = document.getElementById('p2tKey').value;
+    var p2tEnable = document.getElementById('p2t').checked;
     chrome.storage.sync.set({
-        favoriteColor: color,
-        likesColor: likesColor
+        talkKey: talkKey,
+        p2tEnable: p2tEnable
     }, function() {
         // Update status to let user know options were saved.
         var status = document.getElementById('status');
@@ -20,11 +20,11 @@ function save_options() {
 function restore_options() {
     // Use default value color = 'red' and likesColor = true.
     chrome.storage.sync.get({
-        favoriteColor: 'red',
-        likesColor: true
+        talkKey: '`',
+        p2tEnable: true
     }, function(items) {
-        document.getElementById('color').value = items.favoriteColor;
-        document.getElementById('like').checked = items.likesColor;
+        document.getElementById('p2tKey').value = items.talkKey;
+        document.getElementById('p2t').checked = items.p2tEnable;
     });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
